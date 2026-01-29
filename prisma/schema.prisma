@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Note: SQLite doesn't support enums, so we use String with validation in the application
+// Role values: ADMIN, EDITOR, VIEWER
+// AccountType values: BANK, CREDIT_CARD, CASH, WALLET
+// Currency values: GTQ, USD
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          String    @default("VIEWER")
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  balanceHistory BalanceHistory[]
+  alerts        Alert[]
+  transactions  Transaction[]
+}
+
+model Bank {
+  id          String    @id @default(cuid())
+  name        String
+  shortName   String?
+  color       String    @default("#3B82F6")
+  logo        String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  accounts    Account[]
+}
+
+model Account {
+  id              String      @id @default(cuid())
+  name            String
+  type            String      // BANK, CREDIT_CARD, CASH, WALLET
+  currency        String      @default("GTQ") // GTQ, USD
+  lastFourDigits  String?
+  balance         Float       @default(0)
+  notes           String?
+  isActive        Boolean     @default(true)
+
+  // Credit card specific fields
+  creditLimit     Float?
+  cutoffDay       Int?        // Day of month (1-31)
+  paymentDay      Int?        // Day of month (1-31)
+
+  bankId          String?
+  bank            Bank?       @relation(fields: [bankId], references: [id])
+
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  balanceHistory  BalanceHistory[]
+  transactionsFrom Transaction[] @relation("TransactionFrom")
+  transactionsTo   Transaction[] @relation("TransactionTo")
+}
+
+model Transaction {
+  id              String    @id @default(cuid())
+  type            String    // INGRESO, EGRESO, TRANSFERENCIA, PAGO_TARJETA
+  amount          Float
+  description     String?
+  category        String?   // VENTAS, NOMINA, SERVICIOS, COMPRAS, OTROS
+  date            DateTime  @default(now())
+
+  fromAccountId   String?
+  fromAccount     Account?  @relation("TransactionFrom", fields: [fromAccountId], references: [id])
+
+  toAccountId     String?
+  toAccount       Account?  @relation("TransactionTo", fields: [toAccountId], references: [id])
+
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+
+  createdAt       DateTime  @default(now())
+}
+
+model BalanceHistory {
+  id              String    @id @default(cuid())
+  previousBalance Float
+  newBalance      Float
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  accountId       String
+  account         Account   @relation(fields: [accountId], references: [id])
+
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model Alert {
+  id          String    @id @default(cuid())
+  type        String    // PAYMENT_DUE, EXCESS_DEBT, HIGH_USAGE, LOW_BALANCE
+  message     String
+  isRead      Boolean   @default(false)
+  isDismissed Boolean   @default(false)
+  data        String?   // JSON string for additional data
+  createdAt   DateTime  @default(now())
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model ExchangeRate {
+  id          String    @id @default(cuid())
+  fromCurrency String   // GTQ, USD
+  toCurrency   String   // GTQ, USD
+  rate        Float
+  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+
+  @@unique([fromCurrency, toCurrency])
+}
+
+model Settings {
+  id                  String    @id @default(cuid())
+  displayCurrency     String    @default("GTQ")
+  alertDaysBefore     Int       @default(3)
+  excessDebtThreshold Float     @default(80) // percentage
+  highUsageThreshold  Float     @default(80) // percentage
+  updatedAt           DateTime  @updatedAt
+}
