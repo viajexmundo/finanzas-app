@@ -404,8 +404,8 @@ export default function UsuariosPage() {
                     !user.isActive ? "opacity-60" : ""
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <Avatar>
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                    <Avatar className="shrink-0">
                       <AvatarFallback
                         className={
                           user.role === "ADMIN"
@@ -416,27 +416,28 @@ export default function UsuariosPage() {
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{user.name}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-medium truncate">{user.name}</p>
                         {!user.isActive && (
-                          <Badge variant="secondary">Inactivo</Badge>
+                          <Badge variant="secondary" className="shrink-0">Inactivo</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground truncate">
                         {user.email}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <Badge variant={getRoleBadgeVariant(user.role)}>
+                  <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+                    <Badge variant={getRoleBadgeVariant(user.role)} className="hidden sm:flex">
                       <RoleIcon className="mr-1 h-3 w-3" />
                       {getRoleLabel(user.role)}
                     </Badge>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8"
                         onClick={() => openEditDialog(user)}
                       >
                         <Pencil className="h-4 w-4" />
@@ -444,6 +445,7 @@ export default function UsuariosPage() {
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8"
                         onClick={() => handleToggleActive(user.id, user.isActive)}
                       >
                         {user.isActive ? (

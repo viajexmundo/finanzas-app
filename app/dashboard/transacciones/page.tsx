@@ -346,19 +346,20 @@ export default function TransaccionesPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Transacciones</h1>
           <p className="text-muted-foreground">Registra movimientos, transferencias y pagos</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => setImportDialogOpen(true)}>
-            <Upload className="mr-2 h-4 w-4" />
-            Importar CSV
+            <Upload className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Importar CSV</span>
           </Button>
           <Button onClick={() => setShowForm(true)} className="gap-2">
             <Plus className="h-4 w-4" />
-            Nueva Transacción
+            <span className="hidden sm:inline">Nueva Transacción</span>
+            <span className="sm:hidden">Nueva</span>
           </Button>
         </div>
       </div>

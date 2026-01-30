@@ -149,16 +149,16 @@ export default function ReportesPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-2xl font-bold">Reportes</h1>
           <p className="text-muted-foreground">
             Análisis financiero — {period === "weekly" ? "Últimos 7 días" : "Últimos 30 días"}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <Select value={period} onValueChange={(v: ReportPeriod) => setPeriod(v)}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-32 sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -166,13 +166,13 @@ export default function ReportesPage() {
               <SelectItem value="monthly">Mensual</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={fetchReport} disabled={loading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            Actualizar
+          <Button variant="outline" size="sm" onClick={fetchReport} disabled={loading}>
+            <RefreshCw className={`h-4 w-4 sm:mr-2 ${loading ? "animate-spin" : ""}`} />
+            <span className="hidden sm:inline">Actualizar</span>
           </Button>
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="mr-2 h-4 w-4" />
-            Exportar CSV
+          <Button variant="outline" size="sm" onClick={handleExport}>
+            <Download className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Exportar CSV</span>
           </Button>
         </div>
       </div>
