@@ -83,10 +83,11 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(account, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating account:", error);
+    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: `Error interno del servidor: ${errorMessage}` },
       { status: 500 }
     );
   }
