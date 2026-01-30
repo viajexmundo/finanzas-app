@@ -153,9 +153,14 @@ export default function CuentasPage() {
         setDialogOpen(false);
         resetForm();
         fetchAccounts();
+      } else {
+        const errorData = await res.json();
+        console.error("Error response:", errorData);
+        alert(`Error: ${errorData.error || "No se pudo guardar la cuenta"}`);
       }
     } catch (error) {
       console.error("Error saving account:", error);
+      alert("Error de conexión al guardar la cuenta");
     }
   };
 
