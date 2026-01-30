@@ -301,14 +301,14 @@ export default function BancosPage() {
                         Clic para subir imagen
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        PNG, JPG (max 2MB)
+                        PNG, JPG, WebP (max 500KB)
                       </p>
                     </div>
                   )}
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/png,image/jpeg,image/jpg"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
                     onChange={handleFileChange}
                     className="hidden"
                   />
