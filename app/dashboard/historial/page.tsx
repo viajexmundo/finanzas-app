@@ -235,7 +235,7 @@ export default function HistorialPage() {
                         </Badge>
                       </div>
 
-                      <div className="mt-1 flex items-center gap-4 text-sm">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                         <span className="text-muted-foreground">
                           {formatCurrency(item.previousBalance, item.account.currency)}
                         </span>
@@ -244,7 +244,7 @@ export default function HistorialPage() {
                           {formatCurrency(item.newBalance, item.account.currency)}
                         </span>
                         <span
-                          className={`font-medium ${
+                          className={`font-medium whitespace-nowrap ${
                             isDebt
                               ? isIncrease
                                 ? "text-destructive"
